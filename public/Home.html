@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicación de Notas</title>
+
+
+    
+    <link rel="stylesheet" href="styles.css">
+
+
+</head>
+<body>
+    <div class="container">
+        <h1>Aplicación de Notas</h1>
+    <form action="edicion.html">
+        <button id="crearNota">Crear Nota</button>
+    </form>
+        <input type="text" id="search" placeholder="Busqueda por ID">
+
+
+        <div id="notesContainer" class="grid-container"></div>
+
+    </div>
+
+    <script>
+        // Obtener las notas del servidor y mostrarlas en la página
+        fetch('/Home')
+            .then(response => response.json())
+            .then(notes => {
+                const notesContainer = document.getElementById('notesContainer');
+                notes.forEach(note => {
+                    const noteCard = document.createElement('div');
+                    noteCard.classList.add('note-card');
+                    noteCard.innerHTML = `
+                        <h2>${note.titulo}</h2>
+                        <p><strong>Contenido:</strong>${note.contenido}</p>
+                        <p><strong>Tags:</strong> ${note.tags}</p>
+                        <p><strong>Fecha de Creación:</strong> ${note.fechaCreacion}</p>
+                       <a href="edicion.html?id=${note.id}">Editar</a> <!-- Enlace para editar la nota -->
+                       
+                    
+                    <form action="/Eliminar" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="${note.id}">
+                            <button type="submit">Eliminar</button>
+                        </form>
+                        ` 
+                    ;
+                    notesContainer.appendChild(noteCard);
+                });
+            })
+            .catch(error => console.error('Error fetching notes:', error));
+    </script>
+
+    
+   
+</body>
+</html>
